@@ -15,6 +15,21 @@ def get_folder_content(path):
     return os.listdir(path)
 
 
+def build_cache(path, file_list):
+    cache = {}
+    stat_names = ["st_mode", "st_ino", "st_dev", "st_nlink", "st_uid", "st_gid", "st_size", "st_atime", "st_mtime", "st_ctime"]
+    # Get the attributes of each file, then stores the couple (file name : dictionary_of_the_file_attributes) in the cache
+    for file in file_list:
+        current_file_stats = os.stat(path+file)
+        stats_dict = {}
+        i = 0
+        for value in current_file_stats:
+            stats_dict[stat_names[i]] = value
+            i += 1
+        cache[file] = stats_dict
+    return cache
+
+
 def wake_disks(vol_letter):
     pass
 
@@ -47,20 +62,12 @@ def main():
     remote_file_list = set([])
     local_file_list.update(get_folder_content(local_path))
     remote_file_list.update(get_folder_content(remote_path))
-    stat_names = ["st_mode", "st_ino", "st_dev", "st_nlink", "st_uid", "st_gid", "st_size", "st_atime", "st_mtime", "st_ctime"]
-    for file in remote_file_list:
-        current_file_stats = os.stat(remote_path+file)
-        print(type(current_file_stats))
-        print(current_file_stats)
-        stats_dict = {}
-        for stat in current_file_stats:
-             print(stat.__class__)
-        #     print(stat)
-            # stats_dict[stat.name] = stat
-            # print(stat.name, stat)
+    # Builds some kind of log listing each file and it's attributes
+    remote_cache.update(build_cache(remote_path, remote_file_list))
+    print("remote: ", remote_cache)
 
-    for file in local_file_list:
-        pass
+    local_cache.update((build_cache(local_path, local_file_list)))
+    print("local: ", local_cache)
 
 
 if __name__ == '__main__':

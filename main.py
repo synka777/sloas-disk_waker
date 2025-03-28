@@ -1,4 +1,4 @@
-"""Slow-ass disks waker
+"""Slow-ass Disks Waker
 
 Copyright (c) 2021 Mathieu BARBE-GAYET
 All Rights Reserved.
@@ -47,7 +47,7 @@ def build_cache(path, file_list):
     """
     cache = {}
     stat_names = ["st_mode", "st_ino", "st_dev", "st_nlink", "st_uid", "st_gid", "st_size", "st_atime", "st_mtime",
-                  "st_ctime"]
+                "st_ctime"]
     # Get the attributes of each file, then stores the couple (file name : dictionary_of_the_file_attributes) in the cache
     for file in file_list:
         # If the file is not in the exclusion list we add it to the cache and return it
@@ -200,12 +200,10 @@ def main():
     3/ Then, create a link from the remote file to the local folder
     4/ Delete the original file from the local folder
     """
-    local_path = "C:/users/Dope/Downloads/"
+    local_path = "C:/users/User/Downloads/"
     remote_path = "D:/Downloads/"
 
-    #
     # 0/ Check if the list is empty not done for now
-    #
 
     # Initializes and fills a set of file names for both a local and remote dir
     local_file_list = set(get_files(local_path))
@@ -216,9 +214,7 @@ def main():
 
     delete_orphan_links(local_path, get_all_elements(local_path), remote_files_cache)
 
-    #
     # 1/ Manually started: check the difference between a local folder and it's remote counterpart
-    #
 
     # Checks if some files exist on both locations and then tries to rename it.
     # If it works for at least one file, we rebuild the cache with the current content from the local folder.
@@ -230,8 +226,8 @@ def main():
 
     files_to_copy = dict(get_file_list_to_copy(local_files_cache, remote_files_cache))
 
-    #
     # 2/ Copy the missing files to the remote directory
+
     # - then removes the original file
 
     copy_to_remote(files_to_copy, local_path, remote_path)
@@ -240,9 +236,7 @@ def main():
     remote_files_cache.update(files_to_copy)
     remove_from_cache(local_files_cache, files_to_copy)
 
-    #
     # 3/ Create a link to the local folder
-    #
 
     # Create a list of ALL files names (w/ symlinks), then compare it with the remote folder's content
     waiting_for_a_symlink = dict(get_files_waiting_for_a_symlink(get_all_elements(local_path), remote_files_cache))
